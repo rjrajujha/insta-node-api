@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongodb": "^4.12.1",
+    "nodemon": "^2.0.20"
+  },
+  "name": "insta-node-api",
+  "description": "BackEnd Server for InstaClone Project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rjrajujha/insta-node-api.git"
+  },
+  "author": "Raju",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rjrajujha/insta-node-api/issues"
+  },
+  "homepage": "https://github.com/rjrajujha/insta-node-api#readme"
+}
