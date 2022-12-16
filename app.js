@@ -7,8 +7,8 @@ app.get('/', (req, res) => {
 })
 
 app.get('/*', (req, res) => {
-    res.send('Page Not Found');
-    res.end();
-  })
+  res.send('Page Not Found');
+  res.end();
+})
 
 module.exports = app;
