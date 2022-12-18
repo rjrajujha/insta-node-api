@@ -18,11 +18,11 @@ const uerSchema = new mongoose.Schema({
         required: true
     },
     PostImage: {
+        type: String,
         default: "https://cdn.siasat.com/wp-content/uploads/2020/04/Instagram--780x470.jpg"
     },
     date: {
         type: Date,
-        required: true,
         default: Date.now
     }
 
