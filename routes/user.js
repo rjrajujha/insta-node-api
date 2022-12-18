@@ -1,71 +1,71 @@
-const express = require('express');
+const Posts = require('../models/user')
+const express = require("express")
+const multer = require("multer")
+const fileUpload = multer()
+const cloudinary = require('cloudinary').v2
+const streamifier = require('streamifier')
+
 const router = express.Router();
-const user = require('../models/user');
+const dotenv = require('dotenv')
+dotenv.config();
+cloudinary.config({
 
-// Getting all
-router.get('/', async (req, res) => {
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET
+});
+router.get("/", async (req, res) => {
     try {
+        const posts = await Posts.find().sort({ date: -1 });
+        console.log(posts)
+        res.status(200).json(posts)
 
-
-    } catch (err) {
-        res.status(500).json({ message: err.message })
+    } catch (e) {
+        res.status(400).json({
+            status: "Failed",
+            message: e.message
+        })
     }
 })
-
-// Getting One
-router.get('/:id', getUser, (req, res) => {
-    res.json(res.user)
-})
-
-// Creating one
-router.post('/', async (req, res) => {
-    const user = new user({
-
-    })
-    try {
-        const newuser = await user.save()
-        res.status(201).json(newuser)
-    } catch (err) {
-        res.status(400).json({ message: err.message })
-    }
-})
-
-// Updating One
-router.patch('/:id', getUser, async (req, res) => {
-
-
-    try {
-        const updateduser = await res.user.save()
-        res.json(updateduser);
-
-    } catch (err) {
-        res.status(400).json({ message: err.message })
-    }
-})
-
-// Deleting One
-router.delete('/:id', getUser, async (req, res) => {
-    try {
-        await res.user.remove()
-        res.json({ message: 'Deleted user' })
-    } catch (err) {
-        res.status(500).json({ message: err.message })
-    }
-})
-
-async function getUser(req, res, next) {
-    let user
-    try {
-        user = await user.findById(req.params.id)
-        if (user == null) {
-            return res.status(404).json({ message: 'Cannot find user' })
+router.post("/", fileUpload.single('image'), (req, res, next) => {
+    let streamUpload = (req) => {
+        return new Promise((resolve, reject) => {
+            let stream = cloudinary.uploader.upload_stream(
+                (error, result) => {
+                    if (result) {
+                        resolve(result);
+                    } else {
+                        reject(error);
+                    }
+                }
+            );
+            streamifier.createReadStream(req.file.buffer).pipe(stream);
+        });
+    };
+    async function upload(req) {
+        try {
+            let result = await streamUpload(req);
+            console.log("result", result);
+            req.body.PostImage = result.url;
+            next();
+        } catch (e) {
+            console.log("error", e)
         }
-    } catch (err) {
-        return res.status(500).json({ message: err.message })
+
     }
+    upload(req);
+}, async (req, res) => {
+    try {
+        let result = await Posts.create({ ...req.body });
+        res.status(200).json(result)
+        console.log(result)
 
-    res.user = user;
-    next();
-}
+    } catch (e) {
+        res.status(400).json({
+            status: "Failed",
+            message: e.message
+        })
+    }
+})
 
-module.exports = router
+module.exports = router;

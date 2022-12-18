@@ -1,21 +1,13 @@
 const express = require('express');
+const usersRoute = require('./routes/user');
+const homePage = require('./routes/homepage');
 const app = express();
 const cors = require('cors');
-const userData = require('./routes/user');
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded());
 
-app.get('/', (req, res) => {
-  res.send("Page");
-  res.end();
-})
-
-// app.use(cors())
-// app.use(express.json());
-// app.use(express.urlencoded())
-// app.use("/api/users",userData);
-
-app.get('/*', (req, res) => {
-  res.send('Page Not Found');
-  res.end();
-})
+app.use('/', homePage);
+app.use("/api/users", usersRoute);
 
 module.exports = app;
