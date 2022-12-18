@@ -28,4 +28,4 @@ const uerSchema = new mongoose.Schema({
 
 })
 
-module.exports = mongoose.model('user', uerSchema);
+module.exports = mongoose.model('Instaclone', uerSchema);
