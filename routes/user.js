@@ -10,9 +10,9 @@ const dotenv = require('dotenv')
 dotenv.config();
 cloudinary.config({
 
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET
+    cloud_name: process.env.CLOUD_NAME || 'dktebfwtc',
+    api_key: process.env.API_KEY || '229475991692668',
+    api_secret: process.env.API_SECRET || 'qhK5mhQCHe2AFhC1qJ7313cutPA'
 });
 router.get("/", async (req, res) => {
     try {
